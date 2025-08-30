@@ -33,6 +33,10 @@
               <%- list_categories() %>
             </div>
           </div>
+        <% } else if (page.type === 'login') { %>
+          <div id="login">
+            <%- partial('_partial/login/login-form') %>
+          </div>
         <% } else { %>
           <%- page.content %>
         <% } %>

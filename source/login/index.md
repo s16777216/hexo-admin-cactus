@@ -1,7 +1,7 @@
 ---
 title: 登入
 date: 2025-08-25 20:50:43
-layout: false
+type: login
 ---
 
 <div class="login-container">
