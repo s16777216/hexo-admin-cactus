@@ -15,8 +15,10 @@ direction: ltr
 # languages/*.yml
 nav:
   home: /
-  about: /about/
   articles: /archives/
+  category: /categories/
+  tag: /tags/
+  about: /about/
   search: /search/
   # projects: http://github.com/probberechts
 
@@ -34,7 +36,7 @@ nav:
 
 # Customize the overview with displaying a tagcloud on the index page.
 # Options: https://hexo.io/docs/helpers.html#tagcloud
-tags_overview: false
+tags_overview: true
 
 # Customize the overview with the most recent blog posts on the index page.
 # Options:
@@ -52,18 +54,18 @@ posts_overview:
 # Note: this does not work together with pagination, since the pagination
 # plugin will sort pages by date of creation.
 archive:
-  sort_updated: false
+  sort_updated: true
 
 # Customize the article view.
 # Options:
 #   - show_updated: show the last modification date.
 post:
-  show_updated: false
+  show_updated: true
 
 # Customize the copyright years
 # Note: if start_year/end_year not provided, will use current year.
 copyright:
-  start_year: 2016
+  start_year: 2025
   end_year:
 
 # Customize the 404 page
