@@ -1,7 +1,7 @@
-FROM node:slim
+FROM node:20-slim
 
-RUN npm install -g hexo-cli
+RUN npm install -g hexo-cli && npm install
 
-RUN npm install
+EXPOSE 4000
 
 CMD ["hexo", "server", "-d"]
