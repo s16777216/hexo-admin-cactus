@@ -1,3 +1,8 @@
-<button title="Login" type="button" id="login-button">
+<a title="Login" id="login-button" href="<%- url_for('/login') %>">
     <i class="fa-solid fa-right-to-bracket"></i>
-</button>
+    
+</a>
+<a title="Logout" id="logout-button">
+    <i class="fa-solid fa-right-from-bracket"></i>
+</a>
+<%- js('js/login-button') %>
