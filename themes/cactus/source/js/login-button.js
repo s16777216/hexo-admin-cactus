@@ -18,25 +18,12 @@ $(document).ready(async function() {
     isLogin.addListener((value) => {
         if (value) {
             $("html").attr("isLogin", "true");
+            console.log("User is logged in");
         } else {
             $("html").attr("isLogin", "false");
+            console.log("User is logged out");
         }
     });
-
-    /**
-     * @param {boolean} isLogin 
-     */
-    function updateLoginButtonIcon(isLogin) {
-        if (isLogin) {
-            loginButton.hide();
-            logoutButton.show();
-        } else {
-            logoutButton.hide();
-            loginButton.show();
-        }
-    }
-
-    // isLogin.addListener(updateLoginButtonIcon);
 
     logoutButton.click(async function() {
         // 1. clear token value in cookie

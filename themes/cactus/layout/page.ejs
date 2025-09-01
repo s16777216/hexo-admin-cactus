@@ -37,6 +37,10 @@
           <div id="login">
             <%- partial('_partial/login/login-form') %>
           </div>
+        <% } else if (page.type === 'editor') { %>
+          <div id="editor">
+            <%- partial('_partial/editor') %>
+          </div>
         <% } else { %>
           <%- page.content %>
         <% } %>
