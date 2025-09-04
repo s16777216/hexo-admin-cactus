@@ -1,8 +1,13 @@
 
 const path = require('path');
-const jwt = require('jsonwebtoken');
+const { generateJWT, verifyJWT } = require('./admin/jwtUtil.cjs');
+const { setupProtectMiddleware } = require('./admin/protect_middleware.cjs');
 
 class BackendServer {
+    /**
+     * @param {import('connect').Server} app 
+     * @param {string} baseUrl 
+     */
     constructor(app, baseUrl) {
         this.app = app;
         this.baseUrl = baseUrl;
@@ -83,23 +88,6 @@ class BackendServer {
     }
 }
 
-const SECRET_KEY = 'your_super_secret_key_please_change_this_to_a_strong_key';
-/**
- * 生成 JWT Token
- * @param {Object} payload 
- * @param {number} expiresIn 
- * @returns 
- */
-function generateJWTToken(payload, expiresIn) {
-    
-    const token = jwt.sign(
-        payload,
-        SECRET_KEY,
-        { expiresIn: expiresIn } // 設定 Token 的有效期限
-    );
-    return token;
-}
-
 /**
  * 
  * @param {import('http').ClientRequest} req 
@@ -118,10 +106,10 @@ function loginAPI(req, res) {
         }
 
         // 2. Generate JWT token
-        const token = generateJWTToken({ username }, 3600);
+        const token = generateJWT({ username }, 3600);
 
         // 3. put token to cookie, timeout 1 hour, make cookie removable
-        res.setHeader("Set-Cookie", `token=${token}; HttpOnly; Max-Age=3600`);
+        res.setHeader("Set-Cookie", `token=${token}; HttpOnly; Max-Age=3600; Path=/`);
 
         // 4. Send response
         res.done();
@@ -134,8 +122,7 @@ function loginAPI(req, res) {
 function logoutAPI(req, res) {
     try {
         // 1. set cookie to expire immediately
-        res.setHeader("Set-Cookie", `token=; HttpOnly; Max-Age=0`);
-
+        res.setHeader("Set-Cookie", `token=; HttpOnly; Max-Age=0; Path=/`);
         res.done();
     } catch (error) {
         hexo.log.error("Logout API error:", error);
@@ -157,19 +144,20 @@ function parseCookie(cookieString = '') {
     return cookies;
 }
 
-function isLogin(req, res, next) {
+async function isLogin(req, res, next) {
     const cookies = parseCookie(req.headers.cookie);
     const token = cookies.token;
     if (!token) {
         return res.send(401, "Unauthorized");
     }
 
-    jwt.verify(token, SECRET_KEY, (err, decoded) => {
-        if (err) {
-            return res.send(401, "Unauthorized");
-        }
+    try{
+        await verifyJWT(token);
         return res.done();
-    });
+    }catch(err){
+        hexo.log.warn("Token verification failed:", err.message);
+        return res.send(401, "Unauthorized");
+    }
 }
 
 hexo.extend.filter.register("server_middleware", function (app) {
@@ -181,3 +169,7 @@ hexo.extend.filter.register("server_middleware", function (app) {
 
     backend.start();
 });
+
+hexo.extend.filter.register("server_middleware", function (app) {
+    setupProtectMiddleware(app, hexo);
+}, 0);
