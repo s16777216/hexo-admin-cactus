@@ -17,10 +17,10 @@ $(document).ready(async function() {
 
     isLogin.addListener((value) => {
         if (value) {
-            $("html").attr("isLogin", "true");
+            $("html").attr("is-login", true);
             console.log("User is logged in");
         } else {
-            $("html").attr("isLogin", "false");
+            $("html").removeAttr("is-login");
             console.log("User is logged out");
         }
     });

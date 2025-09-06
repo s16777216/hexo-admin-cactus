@@ -12,10 +12,12 @@
     &:hover
         transform: scale(1.1)
 
-html[isLogin='true'] #login-button
+// html has attribute is-login when user is logged in
+html[is-login] #login-button
     display: none
 
-html[isLogin='false'] #logout-button
+// html does not have attribute is-login when user is logged out
+html:not([is-login]) #logout-button
     display: none
 
 #login-form

@@ -7,3 +7,11 @@
         background-image: none !important
         &:hover
             transform: scale(1.1)
+
+html[is-login] .post-header
+    .post-edit-icon
+        display: flex
+
+html:not([is-login]) .post-header
+    .post-edit-icon
+        display: none
