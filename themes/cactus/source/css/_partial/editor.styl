@@ -1,0 +1,22 @@
+#editor-page
+    --border-color: #575757;
+
+    .editor-toolbar,.editor-toolbar.fullscreen
+        border-color: var(--border-color);
+        background: $color-background;
+        button
+            color: $color-text;
+            &:hover, &.active
+                background: lighten($color-background, 5%);
+                border-color: var(--border-color);
+        
+    .CodeMirror
+        border-color: var(--border-color);
+        color: $color-text;
+        background: $color-background;
+
+    .editor-preview
+        border-color: var(--border-color);
+        color: $color-text;
+        background: $color-background;
+        padding: 36px;

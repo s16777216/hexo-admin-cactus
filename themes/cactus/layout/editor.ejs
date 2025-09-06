@@ -1,3 +1,8 @@
-This is editor
+<textarea id="editor"></textarea>
+
+<link
+    rel="stylesheet"
+    href="<%- url_for('/lib/easyMDE/easymde.min.css')  %>"
+/>
+<%- js({ src: 'lib/easyMDE/easymde.min.js', defer: true }) %>
 <%- js({ src: 'js/editor', defer: true }) %>
-<hexo-editor></hexo-editor>
