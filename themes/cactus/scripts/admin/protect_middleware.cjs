@@ -6,9 +6,9 @@ const { verifyJWT } = require('./jwtUtil.cjs');
  * @param {import('connect').Server} app 
  * @param {import('hexo')} hexo
  */
-function setupProtectMiddleware(app, hexo) {
+function protectMiddleware(app, hexo) {
     hexo.log.info("[Cactus] Registering protect middleware");
-    app.use((req, res, next) => protectMiddleware(req, res, next, hexo));
+    app.use((req, res, next) => protectMiddlewareHandler(req, res, next, hexo));
 }
 
 /**
@@ -17,7 +17,7 @@ function setupProtectMiddleware(app, hexo) {
  * @param {(err?: any) => void} next 
  * @param {import('hexo')} hexo
  */
-async function protectMiddleware(req, res, next, hexo) {
+async function protectMiddlewareHandler(req, res, next, hexo) {
     // 定義所有需要保護的路徑
     const protectedPaths = [
         '/editor/', // 請注意這裡的斜線，確保匹配你重寫後的路徑
@@ -41,5 +41,5 @@ async function protectMiddleware(req, res, next, hexo) {
 }
 
 module.exports = {
-    setupProtectMiddleware
+    protectMiddleware
 };

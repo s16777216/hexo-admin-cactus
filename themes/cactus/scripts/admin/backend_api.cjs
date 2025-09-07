@@ -1,20 +1,22 @@
 
 const path = require('path');
-const { generateJWT, verifyJWT } = require('./admin/jwtUtil.cjs');
-const { setupProtectMiddleware } = require('./admin/protect_middleware.cjs');
+const { generateJWT, verifyJWT } = require('./jwtUtil.cjs');
+const { parseCookie } = require('./cookieUtil.cjs');
 
 class BackendServer {
     /**
      * @param {import('connect').Server} app 
+     * @param {import('hexo')} hexo 
      * @param {string} baseUrl 
      */
-    constructor(app, baseUrl) {
+    constructor(app, hexo, baseUrl) {
         this.app = app;
+        this.hexo = hexo;
         this.baseUrl = baseUrl;
     }
 
     start() {
-        hexo.log.info("Backend Server started");
+        this.hexo.log.info("Backend Server started");
     }
 
     /**
@@ -26,7 +28,7 @@ class BackendServer {
     use(method, url, handler) {
         method = method.toUpperCase();
         const fullUrl = path.join(this.baseUrl, url).replaceAll(/\\/g, '/');
-        hexo.log.warn(`Setup API route: ${method.padStart(7)} | ${fullUrl}`);
+        this.hexo.log.warn(`Setup API route: ${method.padStart(7)} | ${fullUrl}`);
 
         this.app.use(fullUrl, async function (req, res, next) {
             if (req.method !== method) {
@@ -43,7 +45,7 @@ class BackendServer {
                         if (!req.body) return;
                         req.body = JSON.parse(req.body);
                     } catch (error) {
-                        hexo.log.error("Failed to parse request body:", error);
+                        this.hexo.log.error("Failed to parse request body:", error);
                         req.body = {};
                     }finally{
                         resolve();
@@ -130,20 +132,6 @@ function logoutAPI(req, res) {
     }
 }
 
-/**
- * 解析 Cookie 字串
- * @param {string} cookieString 
- * @returns {{[key: string]: string}} cookies
- */
-function parseCookie(cookieString = '') {
-    const cookies = {};
-    cookieString.split(';').forEach(cookie => {
-        const [name, value] = cookie.split('=').map(c => c.trim());
-        cookies[name] = value;
-    });
-    return cookies;
-}
-
 async function isLogin(req, res, next) {
     const cookies = parseCookie(req.headers.cookie);
     const token = cookies.token;
@@ -159,17 +147,21 @@ async function isLogin(req, res, next) {
         return res.send(401, "Unauthorized");
     }
 }
-
-hexo.extend.filter.register("server_middleware", function (app) {
-    const backend = new BackendServer(app, "/api");
+/**
+ * 
+ * @param {import('connect').Server} app 
+ * @param {import('hexo')} hexo 
+ */
+function backendApi(app, hexo) {
+    const backend = new BackendServer(app, hexo, "/api");
 
     backend.post("/login", loginAPI);
     backend.get("/logout", logoutAPI);
     backend.get("/isLogin", isLogin);
 
     backend.start();
-});
+}
 
-hexo.extend.filter.register("server_middleware", function (app) {
-    setupProtectMiddleware(app, hexo);
-}, 0);
+module.exports = {
+    backendApi
+};
