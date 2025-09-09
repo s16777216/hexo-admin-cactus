@@ -14,9 +14,31 @@
         border-color: var(--border-color);
         color: $color-text;
         background: $color-background;
+        .CodeMirror-cursor
+            border-color: $color-text;
 
     .editor-preview
         border-color: var(--border-color);
         color: $color-text;
         background: $color-background;
         padding: 36px;
+
+    .editor-header
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px
+
+.button
+    color: $color-text;
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+    padding: 6px 12px;
+    &:hover
+        color: $color-accent-1
+    &:active
+        color: lighten($color-accent-1, 20%)
+        border-color: lighten($color-accent-1, 20%)
+    i
+        margin-right: 3px

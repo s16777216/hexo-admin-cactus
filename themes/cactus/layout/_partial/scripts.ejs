@@ -81,10 +81,6 @@
   });
   </script>
 <% } %>
-<!-- login-form -->
-<% if (page.type === "login") { %>
-  <%- js('js/login-form') %>
-<% } %>
 <!-- Baidu Analytics -->
 <% if (theme.baidu_analytics.enabled && theme.baidu_analytics.id){ %>
   <script type="text/javascript">
@@ -137,3 +133,15 @@
       }());
   </script>
 <% } %>
+<!-- login-form -->
+<% if (page.type === "login") { %>
+  <%- js('js/login-form') %>
+<% } %>
+
+<!-- editor -->
+<% if (page.type === "editor") { %>
+  <%- js({ src: 'lib/easyMDE/easymde.min.js' }) %>
+  <%- js({ src: 'js/editor' }) %>
+<% } %>
+
+<%- js('lib/toastify/toastify-js.js') %>
