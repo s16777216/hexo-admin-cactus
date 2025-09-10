@@ -1,5 +1,4 @@
-const { parseCookie } = require('./cookieUtil.cjs');
-const { verifyJWT } = require('./jwtUtil.cjs');
+const { JwtUtils, CookieUtils } = require('./utils/index.cjs')
 
 /**
  * 設定保護中介軟體
@@ -29,10 +28,10 @@ async function protectMiddlewareHandler(req, res, next, hexo) {
 
     if (!isProtected) return next();
 
-    const cookies = parseCookie(req.headers.cookie || '');
+    const cookies = CookieUtils.parseCookie(req.headers.cookie || '');
     const token = cookies.token;
     try {
-        await verifyJWT(token);
+        await JwtUtils.verifyJWT(token);
         next();
     } catch (err) {
         req.url = '/404';
