@@ -1,5 +1,6 @@
 const fs = require('hexo-fs');
 const path = require('path');
+const matter = require('gray-matter');
 
 /**
  * 取得單一文章內容
@@ -27,16 +28,26 @@ function getPost(req, res, hexo) {
     }
 
     // 3. 讀取文章內容
-    const post = fs.readFileSync(filePath, {
-        encoding: 'utf-8'
-    });
+    let post = matter.read(filePath);
+
+    if (!post.header) {
+        post = matter.read(filePath, {
+            delims: ['---', '---'],
+        });
+    }
+
     if (!post) {
         res.send(500, "Internal Server Error: Unable to read post");
         return;
     }
 
+    const result = {
+        header: post.matter.trim(),
+        content: post.content.trim(),
+    }
+
     // 4. 回傳文章內容
-    res.done(post);
+    res.done(result);
 }
 
 module.exports = getPost;

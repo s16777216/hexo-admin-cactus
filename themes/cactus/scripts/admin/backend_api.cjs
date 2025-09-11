@@ -65,12 +65,12 @@ class BackendServer {
                     return res.end('');
                 }
                 res.setHeader('Content-type', 'application/json')
-                res.end(JSON.stringify(val))
+                res.end(JSON.stringify(val || {}))
             }
             res.done = done
             res.send = function (num, data) {
                 res.statusCode = num
-                res.end(data)
+                res.end(JSON.stringify(data || {}))
             }
 
             try {

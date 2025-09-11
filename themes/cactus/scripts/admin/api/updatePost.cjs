@@ -1,3 +1,4 @@
+const { default: matter } = require('gray-matter');
 const fs = require('hexo-fs');
 const path = require('path');
 
@@ -10,7 +11,7 @@ const path = require('path');
 function updatePost(req, res, hexo) {
     const postPath = decodeURIComponent(req.url || '');
     
-    const newContent = req.body;
+
 
     // 1. 確認是否有提供文章路徑
     if (!postPath && postPath !== '/') {
@@ -20,7 +21,6 @@ function updatePost(req, res, hexo) {
 
     // 2. 檢查文章是否存在
     const filePath = path.join(hexo.source_dir, postPath);
-    hexo.log.info(`[Cactus] Checking if post exists at path: ${filePath}`);
     const postPathExists = fs.existsSync(filePath);
     if (!postPathExists) {
         res.send(404, "Not Found: Post does not exist");
@@ -28,7 +28,14 @@ function updatePost(req, res, hexo) {
     }
 
     // 3. 更新文章內容
-    fs.writeFileSync(filePath, newContent, {
+    /**
+     * @type {{header?: string, content?: string}}
+     */
+    const post = req.body;
+    const header = post.header || '';
+    const content = post.content || '';
+    const rawContent = `---\n${header}\n---\n${content}`;
+    fs.writeFileSync(filePath, rawContent, {
         encoding: 'utf-8'
     });
 
