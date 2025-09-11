@@ -1,27 +1,13 @@
 $(document).ready(function() {
     const postPath = window.location.pathname.replace(/^\/editor\//, '');
 
-    const editor = document.getElementById('editor');
-    const easyMDE = new EasyMDE({ 
+    const editor = document.querySelector('#content-editor > textarea');
+    const contentEasyMDE = new EasyMDE({ 
         element: editor,
         mode: "markdown",
         sideBySideFullscreen: false,
+        lineNumbers: true,
     });
-
-    const saveButton = $('#save-button');
-
-    async function onSaveButtonClick(){
-        const content = easyMDE.value();
-        await AjaxUtil.put(`/api/posts/${postPath}`, content)
-    }
-
-    async function fetchPostContent(){
-        const content = await AjaxUtil.get(`/api/posts/${postPath}`)
-        easyMDE.value(content);
-    }
-
-    saveButton.on('click', onSaveButtonClick);
-    fetchPostContent();
 
     const headerEditor = document.querySelector('#header-editor > textarea');
     const headerEasyMDE = new EasyMDE({ 
@@ -30,4 +16,27 @@ $(document).ready(function() {
         status: false,
         minHeight: "100px",
     });
+
+    const saveButton = $('#save-button');
+
+
+
+    async function fetchPost(){
+        const res = await AjaxUtil.get(`/api/posts/${postPath}`)
+        headerEasyMDE.value(res.header);
+        contentEasyMDE.value(res.content);
+    }
+
+    async function onSaveButtonClick(){
+        const content = contentEasyMDE.value();
+        await AjaxUtil.put(`/api/posts/${postPath}`, {
+            header: headerEasyMDE.value(),
+            content: contentEasyMDE.value(),
+        })
+    }
+
+    saveButton.on('click', onSaveButtonClick);
+
+    fetchPost();
+    contentEasyMDE.togglePreview();
 });

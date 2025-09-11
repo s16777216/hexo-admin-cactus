@@ -1,5 +1,8 @@
 #editor-page
     --border-color: #575757;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
     .editor-toolbar,.editor-toolbar.fullscreen
         border-color: var(--border-color);
@@ -17,19 +20,26 @@
         .CodeMirror-cursor
             border-color: $color-text;
 
+    .CodeMirror-gutters
+        background-color: $color-background;
+        border-color: var(--border-color);
+
     .editor-preview
         border-color: var(--border-color);
         color: $color-text;
         background: $color-background;
         padding: 36px;
+        pre
+            background: darken($color-background, 5%);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px;
 
     .editor-header
         display: flex;
         align-items: center;
-        margin-bottom: 10px
 
     #header-editor
-        margin-bottom: 10px
         .CodeMirror
             border-radius: 4px
         .CodeMirror-lines 
