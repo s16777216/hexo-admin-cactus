@@ -1,11 +1,11 @@
 #archive
-  .post-year
+  .list-label
     list-style-type: none
 
-  .post-list
+  .list
     padding: 0
 
-    .post-item
+    .list-item
       margin-bottom: 1rem
       margin-left: 0
       list-style-type: none
@@ -15,14 +15,34 @@
         margin-right: 16px
         min-width: 100px
         color: $color-meta
-        font-size: 14px
+        font-size: 14pxs
 
   @media (min-width: 480px)
-    .post-list
-      .post-item
+    .list
+      .list-item
         display: flex
         margin-bottom: 5px
         margin-left: 1rem
 
         .meta
           text-align: left
+
+html[is-login] {
+  #new-post-button {
+    display: inline-block !important;
+  }
+
+  #draft-list {
+    display: block !important;
+  }
+}
+
+html:not([is-login]) {
+  #new-post-button {
+    display: none !important;
+  }
+
+  #draft-list {
+    display: none !important;
+  }
+}

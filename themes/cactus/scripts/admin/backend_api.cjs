@@ -185,6 +185,11 @@ function backendApi(app, hexo) {
     backend.get("/isLogin", isLogin);
     backend.get("/posts", require('./api/getPost.cjs'));
     backend.put("/posts", require('./api/updatePost.cjs'));
+    backend.get("/drafts", require('./api/getDrafts.cjs'));
+    backend.post("/posts/new", require('./api/newPost.cjs'));
+    backend.post("/posts/publish", require('./api/publishPost.cjs'));
+    backend.post("/posts/unpublish", require('./api/unpublishPost.cjs'));
+    backend.delete("/posts", require('./api/deletePost.cjs'));
 
     backend.start();
 }
