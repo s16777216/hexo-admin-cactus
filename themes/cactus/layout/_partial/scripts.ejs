@@ -40,7 +40,6 @@
   })
   </script>
 <% } %>
-<%- js('js/util') %>
 <%- js('js/main') %>
 <!-- search -->
 <% if (config.search && (page.search || page.type === "search")){ %>
@@ -133,6 +132,13 @@
       }());
   </script>
 <% } %>
+<!-- util -->
+ <%- js('lib/toastify/toastify-js.js') %>
+<%- js('js/util') %>
+
+<!-- login-button -->
+<%- js('js/login-button') %>
+
 <!-- login-form -->
 <% if (page.type === "login") { %>
   <%- js('js/login-form') %>
@@ -144,4 +150,4 @@
   <%- js({ src: 'js/editor' }) %>
 <% } %>
 
-<%- js('lib/toastify/toastify-js.js') %>
+

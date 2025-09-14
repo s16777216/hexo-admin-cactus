@@ -31,38 +31,91 @@ $(document).ready(function() {
     }
 
     async function onSaveButtonClick(){
-        await AjaxUtil.put(`/api/posts/${postPath}`, {
-            header: headerEasyMDE.value(),
-            content: contentEasyMDE.value(),
-        })
+        try{
+            saveButton.addClass('loading');
+            await AjaxUtil.put(`/api/posts/${postPath}`, {
+                header: headerEasyMDE.value(),
+                content: contentEasyMDE.value(),
+            })
+            showMessage({ 
+                message: "Post saved successfully", 
+                type: "success",
+                position: "bottom-center",
+            });
+        }catch(e){
+            console.error(e);
+            showMessage({ 
+                message: "Failed to save post", 
+                type: "error",
+                position: "bottom-center",
+            });
+        }finally{
+            saveButton.removeClass('loading');
+        }
     }
 
     async function onPublishButtonClick(){
-        const match = decodeURIComponent(postPath).match(/_drafts\/(?<slug>.+)\.md/)
-        const slug = match?.groups?.slug;
-        if(!slug){
-            alert("Only drafts can be published");
-            return;
+        try{
+            publishButton.addClass('loading');
+            const match = decodeURIComponent(postPath).match(/_drafts\/(?<slug>.+)\.md/)
+            const slug = match?.groups?.slug;
+            if(!slug){
+                alert("Only drafts can be published");
+                return;
+            }
+            await AjaxUtil.post(`/api/posts/publish`, {
+                slug: slug,
+            });
+            window.location.href = '/archives/';
+        }catch(e){
+            console.error(e);
+            showMessage({ 
+                message: "Failed to publish post", 
+                type: "error",
+                position: "bottom-center",
+            });
+        }finally{
+            publishButton.removeClass('loading');
         }
-        await AjaxUtil.post(`/api/posts/publish`, {
-            slug: slug,
-        });
-        window.location.href = '/archives/';
     }
 
     async function onUnpublishButtonClick(){
-        await AjaxUtil.post(`/api/posts/unpublish`, {
-            source: decodeURIComponent(postPath),
-        });
-        window.location.href = '/archives/';
+        try{
+            unpublishButton.addClass('loading');
+            await AjaxUtil.post(`/api/posts/unpublish`, {
+                source: decodeURIComponent(postPath),
+            });
+            window.location.href = '/archives/';
+        }catch(e){
+            console.error(e);
+            showMessage({ 
+                message: "Failed to unpublish post", 
+                type: "error",
+                position: "bottom-center",
+            });
+        }finally{
+            unpublishButton.removeClass('loading');
+        }
     }
 
     async function onDeleteButtonClick(){
-        if(!confirm("Are you sure you want to delete this post? This action cannot be undone.")){
-            return;
+        try{
+            if(!confirm("Are you sure you want to delete this post? This action cannot be undone.")){
+                return;
+            }
+            deleteButton.addClass('loading');
+            await AjaxUtil.delete(`/api/posts/${postPath}`);
+            window.location.href = '/archives/';
+        }catch(e){
+            console.error(e);
+            showMessage({
+                message: "Failed to delete post",
+                type: "error",
+                position: "bottom-center",
+            });
+        }finally{
+            deleteButton.removeClass('loading');
         }
-        await AjaxUtil.delete(`/api/posts/${postPath}`);
-        window.location.href = '/archives/';
     }
 
     saveButton.click(onSaveButtonClick);

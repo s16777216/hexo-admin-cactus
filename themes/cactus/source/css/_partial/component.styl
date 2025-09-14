@@ -1,0 +1,62 @@
+.button
+    color: $color-text;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid $color-border;
+    cursor: pointer;
+    padding-bottom: 3px
+    &:hover
+        color: $color-accent-1
+        border-bottom-color: $color-accent-1
+    &:active
+        color: lighten($color-accent-1, 20%)
+        border-color: lighten($color-accent-1, 20%)
+    i
+        margin-right: 3px
+    i.fa-spinner
+        display: none
+    &.loading
+        cursor: not-allowed
+        color: lighten($color-text, 30%)
+        i
+            display: none
+        i.fa-spinner
+            display: inline-block
+            animation: spin 1s linear infinite
+            @keyframes spin
+                0%
+                    transform: rotate(0deg)
+                100%
+                    transform: rotate(360deg)
+
+input.input
+    /* 移除瀏覽器預設的外觀 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  
+    /* 其他你想要的樣式 */
+    padding: 8px;
+    background: inherit;
+    color: inherit;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+
+.toastify.toastify
+    background: none
+    background-color: $color-background
+    border: 1px solid transparent
+    box-shadow: none
+    padding: 3px 10px
+    &.success
+        border-color: $color-accent-1
+        color: $color-accent-1
+    &.error
+        border-color: red
+        color: red
+    &.info
+        border-color: $color-text
+        color: $color-text
+    &.warning
+        border-color: orange
+        color: orange

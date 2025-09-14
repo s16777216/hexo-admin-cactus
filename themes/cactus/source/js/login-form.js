@@ -14,7 +14,6 @@ $(document).ready(function() {
 
         try {
             await ajaxLogin(data.username, data.password);
-            console.log("Login successful");
             window.location.href = "/";
         } catch (error) {
             console.error("Login failed:", error);

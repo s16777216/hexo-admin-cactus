@@ -4,7 +4,6 @@
  * @property {string} error - Error message
  * @property {string} message - Error message
  */
-
 class AjaxUtil{
     /**
      * 
@@ -202,4 +201,70 @@ class CookieUtil {
     static removeCookie(name) {
         this.setCookie(name, "", -1);
     }
+}
+
+/**
+ * Show a toast message
+ * @returns {void}
+ */
+function showMessage({
+    message,
+    duration = 3000,
+    type = "info", // info, success, warning, error
+    position = "top-right" // top-left, top-right, bottom-left, bottom-right, top-center, bottom-center
+}) {
+    let _gravity = "";
+    let _position = "";
+    switch (position) {
+        case "top-left":
+            _gravity = "top";
+            _position = "left";
+            break;
+        case "top-right":
+            _gravity = "top";
+            _position = "right";
+            break;
+        case "bottom-left":
+            _gravity = "bottom";
+            _position = "left";
+            break;
+        case "bottom-right":
+            _gravity = "bottom";
+            _position = "right";
+            break;
+        case "top-center":
+            _gravity = "top";
+            _position = "center";
+            break;
+        case "bottom-center":
+            _gravity = "bottom";
+            _position = "center";
+            break;
+        default:
+            _gravity = "top";
+            _position = "right";
+            break;
+    }
+
+    switch (type) {
+        case "success":
+            message = '✔️ ' + message;
+            break;
+        case "warning":
+            message = '⚠️ ' + message;
+            break;
+        case "error":
+            message = '❌ ' + message;
+            break;
+        default:
+            break;
+    }
+
+    Toastify({
+        text: message,
+        duration: duration,
+        className: type,
+        gravity: _gravity,
+        position: _position
+    }).showToast();
 }
