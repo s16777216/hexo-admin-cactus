@@ -38,11 +38,11 @@ function updatePost(req, res, hexo) {
     });
 
     // 4. 若title有變更，更新檔案名稱
-    const oldTitle = path.basename(filePath, path.extname(filePath)).trim();
-    const newTitle = matter(rawContent).data?.title.trim();
-    if (newTitle && newTitle !== oldTitle) {
-        const newFileName = `${newTitle.replaceAll(/[/\\?%*:|"<>]/g, '-')}${path.extname(filePath)}`;
-        const newFilePath = path.join(path.dirname(filePath), newFileName);
+    const oldFileName = path.basename(filePath, path.extname(filePath)).trim();
+    const newFileName = toFileNameCase(matter(rawContent).data?.title.trim() || '');
+    if (newFileName && newFileName !== oldFileName) {
+        const newFileNameTemp = `${newFileName.replaceAll(/ /g, '-')}${path.extname(filePath)}`;
+        const newFilePath = path.join(path.dirname(filePath), newFileNameTemp);
         fs.renameSync(filePath, newFilePath);
 
         // 更新 postPath 以反映新的檔案名稱
@@ -53,6 +53,15 @@ function updatePost(req, res, hexo) {
     res.done({
         path: postPath
     });
+}
+
+/**
+ * string 轉成檔名格式
+ * @param {string} str 
+ * @returns {string}
+ */
+function toFileNameCase(str) {
+    return str.replaceAll(/ /g, '-');
 }
 
 module.exports = updatePost;
