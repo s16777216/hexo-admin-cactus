@@ -103,8 +103,5 @@ theme: cactus
 deploy:
   type: ''
 
-# hexo-admin authentification
-admin:
-  username: admin
-  password_hash: $2a$10$o71cRYlr4SEt53ZFOiTGvuW8VMR.rjqpS6IMCSzztsaYJVNoglsBi
-  secret: my super secret phrase
+mermaid:
+  enable: true

@@ -17,6 +17,7 @@
     "ejs": "^3.1.10",
     "gray-matter": "^4.0.3",
     "hexo": "^7.3.0",
+    "hexo-filter-mermaid-diagrams": "^1.0.5",
     "hexo-fs": "^5.0.0",
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-category": "^2.0.0",
