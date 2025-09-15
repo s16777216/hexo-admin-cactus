@@ -1,7 +1,8 @@
 $(document).ready(function() {
-    const postPath = window.location.pathname.replace(/^\/editor\//, '');
+    const searchPath = decodeURIComponent(window.location.pathname.replace(/^\/editor\//, ''));
+    const postPath = new ReactiveVar(searchPath);
 
-    const isPublished = decodeURIComponent(postPath).startsWith('_posts/');
+    const isPublished = decodeURIComponent(postPath.value).startsWith('_posts/');
 
     const editor = document.querySelector('#content-editor > textarea');
     const contentEasyMDE = new EasyMDE({ 
@@ -25,7 +26,7 @@ $(document).ready(function() {
     const deleteButton = $('#delete-button');
 
     async function fetchPost(){
-        const res = await AjaxUtil.get(`/api/posts/${postPath}`)
+        const res = await AjaxUtil.get(`/api/posts/${encodeURIComponent(postPath.value)}`);
         headerEasyMDE.value(res.header);
         contentEasyMDE.value(res.content);
     }
@@ -33,10 +34,11 @@ $(document).ready(function() {
     async function onSaveButtonClick(){
         try{
             saveButton.addClass('loading');
-            await AjaxUtil.put(`/api/posts/${postPath}`, {
+            const res = await AjaxUtil.put(`/api/posts/${encodeURIComponent(postPath.value)}`, {
                 header: headerEasyMDE.value(),
                 content: contentEasyMDE.value(),
             })
+            postPath.value = res.path;
             showMessage({ 
                 message: "Post saved successfully", 
                 type: "success",
@@ -57,7 +59,7 @@ $(document).ready(function() {
     async function onPublishButtonClick(){
         try{
             publishButton.addClass('loading');
-            const match = decodeURIComponent(postPath).match(/_drafts\/(?<slug>.+)\.md/)
+            const match = postPath.value.match(/_drafts\/(?<slug>.+)\.md/)
             const slug = match?.groups?.slug;
             if(!slug){
                 alert("Only drafts can be published");
@@ -83,7 +85,7 @@ $(document).ready(function() {
         try{
             unpublishButton.addClass('loading');
             await AjaxUtil.post(`/api/posts/unpublish`, {
-                source: decodeURIComponent(postPath),
+                source: postPath.value,
             });
             window.location.href = '/archives/';
         }catch(e){
@@ -104,7 +106,7 @@ $(document).ready(function() {
                 return;
             }
             deleteButton.addClass('loading');
-            await AjaxUtil.delete(`/api/posts/${postPath}`);
+            await AjaxUtil.delete(`/api/posts/${encodeURIComponent(postPath.value)}`);
             window.location.href = '/archives/';
         }catch(e){
             console.error(e);
@@ -135,6 +137,9 @@ $(document).ready(function() {
         }
     }
 
+    postPath.addListener((newPath) => {
+        history.replaceState(null, '', `/editor/${encodeURIComponent(newPath)}`);
+    })
     setupButtonState();
     fetchPost();
     contentEasyMDE.togglePreview();

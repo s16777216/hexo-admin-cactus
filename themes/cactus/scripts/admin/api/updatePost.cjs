@@ -1,4 +1,4 @@
-const { default: matter } = require('gray-matter');
+const matter = require('gray-matter');
 const fs = require('hexo-fs');
 const path = require('path');
 
@@ -9,10 +9,8 @@ const path = require('path');
  * @param {import('hexo')} hexo
  */
 function updatePost(req, res, hexo) {
-    const postPath = decodeURIComponent(req.url || '');
+    let postPath = decodeURIComponent(req.url || '').replace(/^\//, '');
     
-
-
     // 1. 確認是否有提供文章路徑
     if (!postPath && postPath !== '/') {
         res.send(400, "Bad Request: Missing post path");
@@ -39,8 +37,22 @@ function updatePost(req, res, hexo) {
         encoding: 'utf-8'
     });
 
-    // 4. 回傳成功訊息
-    res.done();
+    // 4. 若title有變更，更新檔案名稱
+    const oldTitle = path.basename(filePath, path.extname(filePath)).trim();
+    const newTitle = matter(rawContent).data?.title.trim();
+    if (newTitle && newTitle !== oldTitle) {
+        const newFileName = `${newTitle.replaceAll(/[/\\?%*:|"<>]/g, '-')}${path.extname(filePath)}`;
+        const newFilePath = path.join(path.dirname(filePath), newFileName);
+        fs.renameSync(filePath, newFilePath);
+
+        // 更新 postPath 以反映新的檔案名稱
+        postPath = path.relative(hexo.source_dir, newFilePath).replaceAll(/\\/g, '/');
+    }
+
+    // 5. 回傳成功訊息
+    res.done({
+        path: postPath
+    });
 }
 
 module.exports = updatePost;
